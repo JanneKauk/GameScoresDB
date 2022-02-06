@@ -1,25 +1,58 @@
-import { Injectable } from '@nestjs/common';
-import { Game } from './game.model';
-import { CreateGameDto } from './dto/create-game.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { GamesRepository } from "./games.repository";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Game } from "./game.entity";
+import { CreateGameDto } from "./dto/create-game.dto";
+import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 
 @Injectable()
 export class GamesService {
-  private games: Game[] = [
-    { id: '1', description: 'Great Game', title: 'Nier: Automata' },
-  ];
-
-  getAllGames(): Game[] {
-    return this.games;
+  constructor(
+    @InjectRepository(GamesRepository)
+    private gamesRepository: GamesRepository,
+  ) {
   }
 
-  createGame(createGameDto: CreateGameDto): Game {
-    const { title, description } = createGameDto;
-    const game: Game = {
-      id: '' + Math.random(),
+  getGames(filterDto: GetGamesFilterDto): Promise<Game[]> {
+    return this.gamesRepository.getGames(filterDto);
+  }
+
+  async createGame(createGameDto: CreateGameDto): Promise<Game> {
+    const { title, Description, ReleaseDate, imagesId} = createGameDto;
+
+    const game = this.gamesRepository.create({
       title,
-      description,
-    };
-    this.games.push(game);
+      Description,
+      ReleaseDate,
+      imagesId,
+    });
+    await this.gamesRepository.save(game);
+
+    return game;
+  }
+
+  async getGameById(id: number): Promise<Game> {
+    const found = await this.gamesRepository.findOne(id);
+
+    if(!found) {
+      throw new NotFoundException();
+    }
+    return found;
+  }
+
+    async deleteGameById(id: number): Promise<void> {
+      const result = await this.gamesRepository.delete(id);
+      if(result.affected === 0) {
+        throw new NotFoundException("Game not found");
+      }
+
+    }
+
+  async updateGameTitle(id: number, title: string): Promise<Game> {
+    const game = await this.getGameById(id);
+    game.title = title;
+    await this.gamesRepository.save(game);
+
     return game;
   }
 }
