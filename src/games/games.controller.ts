@@ -3,6 +3,7 @@ import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./game.entity";
+import { CreatePlatformDto } from "./dto/create-platform.dto";
 
 @Controller('games')
 export class GamesController {
@@ -13,10 +14,15 @@ export class GamesController {
     return this.gamesService.getGames(filterDTO);
   }
 
+  @Get('/platforms/:id')
+  getPlatform() {
+    return this.gamesService.getGamePlatforms();
+  }
+
 
   @Post()
-  createGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
-    return this.gamesService.createGame(createGameDto);
+  createGame(@Body() createGameDto: CreateGameDto, @Body('platformId') platformId: number): Promise<Game> {
+    return this.gamesService.createGame(createGameDto, platformId);
   }
 
   @Get('/:id')

@@ -1,16 +1,17 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Images } from "./images.entity";
+import { Platform } from "./dao/platform.entity";
 
 
 @Entity()
 export class Game {
   @PrimaryGeneratedColumn()
-  id: number;
+  Id: number;
 
   @Column()
   title: string;
 
-  @Column({type: Date})
+  @Column({ type: Date })
   ReleaseDate: Date;
 
   @Column()
@@ -27,6 +28,16 @@ export class Game {
 
   // @OneToOne(() => Images, (Images) => Images.Id, { onUpdate: 'CASCADE', onDelete: 'CASCADE'})
   @OneToOne(() => Images)
-  @JoinColumn( { name: 'imagesId' })
+  @JoinColumn({ name: "imagesId" })
   images: Images;
+
+  @ManyToMany(() => Platform, platform => platform.games)
+  @JoinTable({
+    name: "GamePlatform",
+    joinColumn: {
+      name: "gameId",
+      referencedColumnName: "Id"
+    }
+  })
+  platforms: Platform[];
 }
