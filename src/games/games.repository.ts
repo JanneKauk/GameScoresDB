@@ -1,16 +1,16 @@
 import { EntityRepository, Repository } from "typeorm";
-import { Game } from "./game.entity";
+import { gamelistitem } from "./game.entity";
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 
-@EntityRepository(Game) // Repository of entity Game
-export class GamesRepository extends Repository<Game> {
-  async getGames(filterDto: GetGamesFilterDto): Promise<Game[]> {
+@EntityRepository(gamelistitem) // Repository of entity Game
+export class GamesRepository extends Repository<gamelistitem> {
+  async getGames(filterDto: GetGamesFilterDto): Promise<gamelistitem[]> {
     const { search } = filterDto;
 
-    const query = this.createQueryBuilder('game');
+    const query = this.createQueryBuilder('gamelistitem');
 
     if (search) {
-      query.andWhere('game.title LIKE :search OR game.Description LIKE :search ', { search: `%${search}%` });
+      query.andWhere('gamelistitem.title LIKE :search OR gamelistitem.Description LIKE :search ', { search: `%${search}%` });
     }
 
     return await query.getMany();

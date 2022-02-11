@@ -1,32 +1,26 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Images } from "./images.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
-export class Game {
+export class gamelistitem {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   title: string;
 
-  @Column({type: Date})
-  ReleaseDate: Date;
+  @Column()
+  platforms: string;
+
+  @Column()
+  imageUrl: string;
 
   @Column()
   Description: string;
-
 
   @Column({
     nullable: true
   })
   OverallScore: number;
 
-  @Column()
-  imagesId: number;
-
-  // @OneToOne(() => Images, (Images) => Images.Id, { onUpdate: 'CASCADE', onDelete: 'CASCADE'})
-  @OneToOne(() => Images)
-  @JoinColumn( { name: 'imagesId' })
-  images: Images;
 }

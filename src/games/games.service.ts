@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { GamesRepository } from "./games.repository";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game } from "./game.entity";
+import { gamelistitem } from "./game.entity";
 import { CreateGameDto } from "./dto/create-game.dto";
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 
@@ -13,25 +13,26 @@ export class GamesService {
   ) {
   }
 
-  getGames(filterDto: GetGamesFilterDto): Promise<Game[]> {
+  getGames(filterDto: GetGamesFilterDto): Promise<gamelistitem[]> {
     return this.gamesRepository.getGames(filterDto);
   }
 
-  async createGame(createGameDto: CreateGameDto): Promise<Game> {
-    const { title, Description, ReleaseDate, imagesId} = createGameDto;
+  async createGame(createGameDto: CreateGameDto): Promise<gamelistitem> {
+    const {title, platforms, Description, imageUrl, OverallScore} = createGameDto;
 
-    const game = this.gamesRepository.create({
+    const gameListItem = this.gamesRepository.create({
       title,
+      platforms,
+      imageUrl,
       Description,
-      ReleaseDate,
-      imagesId,
+      OverallScore,
     });
-    await this.gamesRepository.save(game);
+    await this.gamesRepository.save(gameListItem);
 
-    return game;
+    return gameListItem;
   }
 
-  async getGameById(id: number): Promise<Game> {
+  async getGameById(id: number): Promise<gamelistitem> {
     const found = await this.gamesRepository.findOne(id);
 
     if(!found) {
@@ -48,7 +49,7 @@ export class GamesService {
 
     }
 
-  async updateGameTitle(id: number, title: string): Promise<Game> {
+  async updateGameTitle(id: number, title: string): Promise<gamelistitem> {
     const game = await this.getGameById(id);
     game.title = title;
     await this.gamesRepository.save(game);

@@ -2,25 +2,25 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestj
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
-import { Game } from "./game.entity";
+import { gamelistitem } from "./game.entity";
 
 @Controller('games')
 export class GamesController {
   constructor(private gamesService: GamesService) {}
 
   @Get()
-  getGames(@Query() filterDTO: GetGamesFilterDto): Promise<Game[]> {
+  getGames(@Query() filterDTO: GetGamesFilterDto): Promise<gamelistitem[]> {
     return this.gamesService.getGames(filterDTO);
   }
 
 
   @Post()
-  createGame(@Body() createGameDto: CreateGameDto): Promise<Game> {
+  createGame(@Body() createGameDto: CreateGameDto): Promise<gamelistitem> {
     return this.gamesService.createGame(createGameDto);
   }
 
   @Get('/:id')
-  getGameById(@Param('id') id: number): Promise<Game> {
+  getGameById(@Param('id') id: number): Promise<gamelistitem> {
     return this.gamesService.getGameById(id);
   }
 
@@ -31,7 +31,7 @@ export class GamesController {
   }
 
   @Patch('/:id/title')
-  updateGameTitle(@Param('id') id: number, @Body('title') title: string): Promise<Game> {
+  updateGameTitle(@Param('id') id: number, @Body('title') title: string): Promise<gamelistitem> {
     return this.gamesService.updateGameTitle(id, title);
   }
 }
