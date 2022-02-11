@@ -7,6 +7,7 @@ import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Platform } from "./dao/platform.entity";
 import { PlatformsRepository } from "./dao/platforms.repository";
 import { getConnection } from "typeorm";
+import { gameListDto } from "./dto/game-list.dto";
 
 @Injectable()
 export class GamesService {
@@ -20,6 +21,19 @@ export class GamesService {
 
   getGames(filterDto: GetGamesFilterDto): Promise<Game[]> {
     return this.gamesRepository.getGames(filterDto);
+  }
+
+  async getGamesWithEverything(): Promise<Game[]> {
+
+   // const gamesWithPlatforms = await connection.getRepository()
+    const test = await this.gamesRepository.createQueryBuilder("game")
+      .leftJoinAndSelect("game.platforms", "platform")
+      .leftJoinAndSelect("game.images", "images")
+      .getMany();
+
+      console.log(test);
+
+    return  test;
   }
 
   async createGame(createGameDto: CreateGameDto, platformId: number): Promise<Game> {

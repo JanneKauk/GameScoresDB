@@ -14,6 +14,15 @@ export class GamesController {
     return this.gamesService.getGames(filterDTO);
   }
 
+  @Get("/everything")
+    getGamesWithEverything(): Promise<Game[]> {
+
+    // const gamesWithPlatforms = await connection.getRepository()
+
+
+    return this.gamesService.getGamesWithEverything();
+  }
+
   @Get('/platforms/:id')
   getPlatform() {
     return this.gamesService.getGamePlatforms();
