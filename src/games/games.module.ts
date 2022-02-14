@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { GamesController } from './games.controller';
 import { GamesService } from './games.service';
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { GamesRepository } from "./games.repository";
-import { ImagesRepository } from "./images.repository";
+import { GamesRepository } from "./dao/games.repository";
+import { ImagesRepository } from "./dao/images.repository";
 import { ConfigModule } from "@nestjs/config";
 import { PlatformsRepository } from "./dao/platforms.repository";
 

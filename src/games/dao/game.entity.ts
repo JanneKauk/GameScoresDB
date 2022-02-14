@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Images } from "./images.entity";
-import { Platform } from "./dao/platform.entity";
+import { Platform } from "./platform.entity";
 
 
 @Entity()

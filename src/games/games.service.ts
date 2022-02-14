@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { GamesRepository } from "./games.repository";
+import { GamesRepository } from "./dao/games.repository";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Game } from "./game.entity";
+import { Game } from "./dao/game.entity";
 import { CreateGameDto } from "./dto/create-game.dto";
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Platform } from "./dao/platform.entity";
