@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Images } from "./images.entity";
 import { Platform } from "./platform.entity";
+import { Genre } from "./genre.entity";
 
 
 @Entity()
@@ -31,7 +32,7 @@ export class Game {
   @JoinColumn({ name: "imagesId" })
   images: Images;
 
-  @ManyToMany(() => Platform, platform => platform.games)
+  @ManyToMany(() => Platform, platform => platform.games, { onDelete: 'CASCADE' })
   @JoinTable({
     name: "GamePlatform",
     joinColumn: {
@@ -40,4 +41,14 @@ export class Game {
     }
   })
   platforms: Platform[];
+
+  @ManyToMany(() => Genre, genre => genre.games, {})
+  @JoinTable({
+    name: "GameGenre",
+    joinColumn: {
+      name: "gameId",
+      referencedColumnName: "Id",
+    }
+  })
+  genres: Genre[];
 }

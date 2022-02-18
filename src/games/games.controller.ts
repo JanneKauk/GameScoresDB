@@ -3,7 +3,6 @@ import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./dao/game.entity";
-import { CreatePlatformDto } from "./dto/create-platform.dto";
 
 @Controller('games')
 export class GamesController {

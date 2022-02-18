@@ -7,7 +7,6 @@ import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Platform } from "./dao/platform.entity";
 import { PlatformsRepository } from "./dao/platforms.repository";
 import { getConnection } from "typeorm";
-import { gameListDto } from "./dto/game-list.dto";
 
 @Injectable()
 export class GamesService {
@@ -29,6 +28,7 @@ export class GamesService {
     const test = await this.gamesRepository.createQueryBuilder("game")
       .leftJoinAndSelect("game.platforms", "platform")
       .leftJoinAndSelect("game.images", "images")
+      .leftJoinAndSelect("game.genres", "genres")
       .getMany();
 
       console.log(test);
@@ -74,6 +74,14 @@ export class GamesService {
   }
 
     async deleteGameById(id: number): Promise<void> {
+      // const foundGame = this.gamesRepository.findOne(id);
+      // const test = getConnection()
+      //   .createQueryBuilder()
+      //   .relation(Game, "platforms")
+      //   .of(foundGame);
+      // const another = await test.delete();
+      //
+      // console.log(another);
       const result = await this.gamesRepository.delete(id);
       if(result.affected === 0) {
         throw new NotFoundException("Game not found");
