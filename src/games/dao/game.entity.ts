@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGen
 import { Images } from "./images.entity";
 import { Platform } from "./platform.entity";
 import { Genre } from "./genre.entity";
+import { Trailer } from "./trailer.entity";
 
 
 @Entity()
@@ -27,10 +28,17 @@ export class Game {
   @Column()
   imagesId: number;
 
+  @Column()
+  trailerId: number;
+
   // @OneToOne(() => Images, (Images) => Images.Id, { onUpdate: 'CASCADE', onDelete: 'CASCADE'})
   @OneToOne(() => Images)
   @JoinColumn({ name: "imagesId" })
   images: Images;
+
+  @OneToOne(() => Trailer)
+  @JoinColumn({name: "trailerId"})
+  trailer: Trailer;
 
   @ManyToMany(() => Platform, platform => platform.games, { onDelete: 'CASCADE' })
   @JoinTable({

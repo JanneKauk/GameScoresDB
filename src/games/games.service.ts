@@ -29,6 +29,7 @@ export class GamesService {
       .leftJoinAndSelect("game.platforms", "platform")
       .leftJoinAndSelect("game.images", "images")
       .leftJoinAndSelect("game.genres", "genres")
+      .leftJoinAndSelect("game.trailer", "trailer")
       .getMany();
 
       console.log(test);

@@ -7,11 +7,12 @@ import { ImagesRepository } from "./dao/images.repository";
 import { ConfigModule } from "@nestjs/config";
 import { PlatformsRepository } from "./dao/platforms.repository";
 import { GenreRepository } from "./dao/genre.repository";
+import { TrailerRepository } from "./dao/trailer.repository";
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([GamesRepository, ImagesRepository, PlatformsRepository, GenreRepository]),
+    TypeOrmModule.forFeature([GamesRepository, ImagesRepository, PlatformsRepository, GenreRepository, TrailerRepository]),
   ],
   controllers: [GamesController],
   providers: [GamesService],
