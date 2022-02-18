@@ -7,6 +7,7 @@ import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Platform } from "./dao/platform.entity";
 import { PlatformsRepository } from "./dao/platforms.repository";
 import { getConnection } from "typeorm";
+import { ReviewRepository } from "./dao/review.repository";
 
 @Injectable()
 export class GamesService {
@@ -15,6 +16,8 @@ export class GamesService {
     private gamesRepository: GamesRepository,
     @InjectRepository(PlatformsRepository)
     private platformsRepository: PlatformsRepository,
+    @InjectRepository(ReviewRepository)
+    private reviewRepository: ReviewRepository,
   ) {
   }
 
@@ -32,6 +35,7 @@ export class GamesService {
       .leftJoinAndSelect("game.trailer", "trailer")
       .getMany();
 
+      console.log(await this.reviewRepository.createQueryBuilder().getMany())
       console.log(test);
 
     return  test;
