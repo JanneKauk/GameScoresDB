@@ -3,6 +3,7 @@ import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./dao/game.entity";
+import { Review } from "./dao/review.entity";
 
 @Controller('games')
 export class GamesController {
@@ -47,5 +48,10 @@ export class GamesController {
   @Patch('/:id/title')
   updateGameTitle(@Param('id') id: number, @Body('title') title: string): Promise<Game> {
     return this.gamesService.updateGameTitle(id, title);
+  }
+
+  @Get('/reviews/:id')
+  getGameReviewsById(@Param('id') id: number): Promise<Review[]> {
+    return this.gamesService.getGameReviewsById(id);
   }
 }

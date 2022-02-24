@@ -8,6 +8,7 @@ import { Platform } from "./dao/platform.entity";
 import { PlatformsRepository } from "./dao/platforms.repository";
 import { getConnection } from "typeorm";
 import { ReviewRepository } from "./dao/review.repository";
+import { Review } from "./dao/review.entity";
 
 @Injectable()
 export class GamesService {
@@ -61,11 +62,21 @@ export class GamesService {
   }
 
   async getGameById(id: number): Promise<Game> {
-    const found = await this.gamesRepository.findOne(id);
-
+    // const found = await this.gamesRepository.findOne(id);
+    const found = await this.gamesRepository.createQueryBuilder("game")
+      .leftJoinAndSelect("game.platforms", "platform")
+      .leftJoinAndSelect("game.images", "images")
+      .leftJoinAndSelect("game.genres", "genres")
+      .leftJoinAndSelect("game.trailer", "trailer").where("game.Id = :id", {id});
     if(!found) {
       throw new NotFoundException();
     }
+    return found.getOne();
+  }
+
+  async getGameReviewsById(id: number): Promise<Review[]> {
+    const found = await this.reviewRepository.createQueryBuilder("review")
+      .where("review.gameId = :id", {id}).getMany()
     return found;
   }
 
