@@ -9,6 +9,9 @@ export class Review {
   id: number;
 
   @Column()
+  ReviewTitle: string;
+
+  @Column()
   ReviewText: string;
 
   @Column()
