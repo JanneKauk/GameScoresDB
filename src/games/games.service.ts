@@ -9,6 +9,8 @@ import { PlatformsRepository } from "./dao/platforms.repository";
 import { getConnection } from "typeorm";
 import { ReviewRepository } from "./dao/review.repository";
 import { Review } from "./dao/review.entity";
+import { UsersRepository } from "./dao/users.repository";
+import { ReviewsDto } from "./dto/reviews.dto";
 
 @Injectable()
 export class GamesService {
@@ -19,6 +21,8 @@ export class GamesService {
     private platformsRepository: PlatformsRepository,
     @InjectRepository(ReviewRepository)
     private reviewRepository: ReviewRepository,
+    @InjectRepository(UsersRepository)
+    private usersRepository: UsersRepository
   ) {
   }
 
@@ -74,10 +78,28 @@ export class GamesService {
     return found.getOne();
   }
 
-  async getGameReviewsById(id: number): Promise<Review[]> {
+  async getGameReviewsById(id: number): Promise<ReviewsDto[]> {
+    const reviews: ReviewsDto[] = [];
+    let reviewsEnt: ReviewsDto;
     const found = await this.reviewRepository.createQueryBuilder("review")
-      .where("review.gameId = :id", {id}).getMany()
-    return found;
+      .leftJoinAndSelect("review.users", "user")
+      .where("review.gameId = :id", {id}).getMany();
+    console.log(found[0]);
+    found.forEach(data => {
+      const foundUsername = data.users.username;
+      reviewsEnt = {
+        id: data.id,
+        ReviewTitle: data.ReviewTitle,
+        ReviewText: data.ReviewText,
+        ReviewScore: data.ReviewScore,
+        username: foundUsername,
+        gameId: data.gameId
+
+      }
+      reviews.push(reviewsEnt);
+    })
+
+    return reviews;
   }
 
   async getGamePlatforms(): Promise<Platform> {

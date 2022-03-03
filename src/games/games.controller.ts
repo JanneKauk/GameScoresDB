@@ -4,6 +4,7 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./dao/game.entity";
 import { Review } from "./dao/review.entity";
+import { ReviewsDto } from "./dto/reviews.dto";
 
 @Controller('games')
 export class GamesController {
@@ -51,7 +52,7 @@ export class GamesController {
   }
 
   @Get('/reviews/:id')
-  getGameReviewsById(@Param('id') id: number): Promise<Review[]> {
+  getGameReviewsById(@Param('id') id: number): Promise<ReviewsDto[]> {
     return this.gamesService.getGameReviewsById(id);
   }
 }
