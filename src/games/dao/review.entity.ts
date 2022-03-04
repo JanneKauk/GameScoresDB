@@ -3,7 +3,7 @@ import { Game } from "./game.entity";
 import { Users } from "./users.entity";
 
 
-@Entity()
+@Entity({name: 'review'})
 export class Review {
   @PrimaryGeneratedColumn()
   id: number;

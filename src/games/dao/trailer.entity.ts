@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
-@Entity()
+@Entity({name: 'trailer'})
 export class Trailer {
   @PrimaryGeneratedColumn()
   Id: number;

@@ -2,7 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "t
 import { Game } from "./game.entity";
 
 
-@Entity()
+@Entity({name: 'genre'})
 export class Genre {
 
   @PrimaryGeneratedColumn()

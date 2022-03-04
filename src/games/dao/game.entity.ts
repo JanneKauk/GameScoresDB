@@ -5,7 +5,7 @@ import { Genre } from "./genre.entity";
 import { Trailer } from "./trailer.entity";
 
 
-@Entity()
+@Entity({name: 'game'})
 export class Game {
   @PrimaryGeneratedColumn()
   Id: number;
