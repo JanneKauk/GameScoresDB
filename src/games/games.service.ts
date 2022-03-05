@@ -30,14 +30,22 @@ export class GamesService {
     return this.gamesRepository.getGames(filterDto);
   }
 
-  async getGamesWithEverything(): Promise<Game[]> {
+  async getGameCount(): Promise<number>{
+    const count = await this.gamesRepository.createQueryBuilder("game")
+      .select("*", "count").getCount();
+    console.log("DB log for count:"+count);
+    return count
+  }
 
-   // const gamesWithPlatforms = await connection.getRepository()
+  async getGamesWithEverything(page): Promise<Game[]> {
+    const to = 20*page
+    const from = to-19
+    // const gamesWithPlatforms = await connection.getRepository()
     const test = await this.gamesRepository.createQueryBuilder("game")
       .leftJoinAndSelect("game.platforms", "platform")
       .leftJoinAndSelect("game.images", "images")
       .leftJoinAndSelect("game.genres", "genres")
-      .leftJoinAndSelect("game.trailer", "trailer")
+      .leftJoinAndSelect("game.trailer", "trailer").where("game.Id >= :from and game.Id <= :to", {from, to})
       .getMany();
 
       console.log(await this.reviewRepository.createQueryBuilder().getMany())

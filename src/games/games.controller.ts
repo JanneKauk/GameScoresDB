@@ -3,7 +3,6 @@ import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./dao/game.entity";
-import { Review } from "./dao/review.entity";
 import { ReviewsDto } from "./dto/reviews.dto";
 
 @Controller('games')
@@ -15,13 +14,15 @@ export class GamesController {
     return this.gamesService.getGames(filterDTO);
   }
 
-  @Get("/everything")
-    getGamesWithEverything(): Promise<Game[]> {
+  @Get("/everything/gameCount")
+  getGameCount(){
+    return this.gamesService.getGameCount();
+  }
 
+  @Get("/everything/:page")
+  getGamesWithEverything(@Param('page') page: number): Promise<Game[]> {
     // const gamesWithPlatforms = await connection.getRepository()
-
-
-    return this.gamesService.getGamesWithEverything();
+    return this.gamesService.getGamesWithEverything(page);
   }
 
   @Get('/platforms/:id')
