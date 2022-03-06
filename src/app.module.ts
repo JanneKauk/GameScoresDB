@@ -3,11 +3,13 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { GamesModule } from "./games/games.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthenticationModule } from "./authentication/authentication.module";
+import { configValidationSchema } from "./config.schema";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`.env.stage.${process.env.STAGE}`]
+      envFilePath: [`.env.stage.${process.env.STAGE}`],
+      validationSchema: configValidationSchema,
     }),
     GamesModule,
     TypeOrmModule.forRootAsync({
