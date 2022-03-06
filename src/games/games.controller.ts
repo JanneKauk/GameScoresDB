@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./dao/game.entity";
 import { Review } from "./dao/review.entity";
 import { ReviewsDto } from "./dto/reviews.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('games')
+// @UseGuards(AuthGuard())
 export class GamesController {
   constructor(private gamesService: GamesService) {}
 

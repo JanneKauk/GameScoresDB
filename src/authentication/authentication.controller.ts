@@ -14,7 +14,8 @@ export class AuthenticationController {
     return this.authentiationService.signUp(authenticationDataDto);
   }
   @Post("/signin")
-  signIn(@Body() authenticationDataDto: AuthenticationDataDto): Promise<string> {
+  signIn(@Body() authenticationDataDto: AuthenticationDataDto): Promise<{ accessToken: string }> {
     return this.authentiationService.signIn(authenticationDataDto);
   }
+
 }

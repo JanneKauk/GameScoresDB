@@ -10,6 +10,7 @@ import { GenreRepository } from "./dao/genre.repository";
 import { TrailerRepository } from "./dao/trailer.repository";
 import { ReviewRepository } from "./dao/review.repository";
 import { UsersRepository } from "./dao/users.repository";
+import { AuthenticationModule } from "../authentication/authentication.module";
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { UsersRepository } from "./dao/users.repository";
       TrailerRepository,
       ReviewRepository,
       UsersRepository
-    ])
+    ]),
+    AuthenticationModule,
   ],
   controllers: [GamesController],
   providers: [GamesService]
