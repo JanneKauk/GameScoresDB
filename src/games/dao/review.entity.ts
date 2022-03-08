@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Game } from "./game.entity";
 import { Users } from "./users.entity";
 
@@ -23,11 +23,11 @@ export class Review {
   @Column()
   gameId: number;
 
-  @OneToOne(() => Users)
+  @ManyToOne(() => Users, users => users.reviews)
   @JoinColumn({ name: "userId"})
   users: Users;
 
-  @OneToOne(() => Game)
+  @ManyToOne(() => Game, game => game.reviews)
   @JoinColumn( {name: "gameId"})
   game: Game;
 

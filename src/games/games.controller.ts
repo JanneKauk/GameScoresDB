@@ -5,6 +5,7 @@ import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Game } from "./dao/game.entity";
 import { ReviewsDto } from "./dto/reviews.dto";
 import { AuthGuard } from "@nestjs/passport";
+import { AddReviewDto } from "./dto/add-review.dto";
 
 @Controller('games')
 // @UseGuards(AuthGuard())
@@ -57,5 +58,12 @@ export class GamesController {
   @Get('/reviews/:id')
   getGameReviewsById(@Param('id') id: number): Promise<ReviewsDto[]> {
     return this.gamesService.getGameReviewsById(id);
+  }
+
+  @Post('/addreview')
+  @UseGuards(AuthGuard())
+  addReview(@Body() addReviewDto: AddReviewDto): Promise<boolean> {
+    console.log("testing if requests comes this far");
+    return this.gamesService.addReview(addReviewDto);
   }
 }
