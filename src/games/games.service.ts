@@ -148,13 +148,14 @@ export class GamesService {
     return game;
   }
 
-  async addReview(addReviewDto: AddReviewDto): Promise<boolean> {
+  async addReview(addReviewDto: AddReviewDto, Id: number): Promise<boolean> {
+    console.log("service " + Id);
     const { ReviewTitle, ReviewText, ReviewScore, userId, gameId } = addReviewDto;
-    const user = await this.usersRepository.findOne(userId);
+    const user = await this.usersRepository.findOne(Id);
     const game = await this.gamesRepository.findOne(gameId);
     if(user && game) {
       console.log("id " + userId + " gameId " + gameId);
-      const found = this.reviewRepository.createQueryBuilder('review').where("review.userId = :userId", {userId}).andWhere("review.gameId = :gameId", {gameId}).getOne();
+      const found = this.reviewRepository.createQueryBuilder('review').where("review.userId = :Id", {Id}).andWhere("review.gameId = :gameId", {gameId}).getOne();
 
       if(! await found) {
         console.log("not found");
@@ -162,7 +163,7 @@ export class GamesService {
           ReviewTitle,
           ReviewText,
           ReviewScore,
-          userId,
+          userId: Id,
           gameId,
           users: user,
           game
