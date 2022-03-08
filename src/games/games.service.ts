@@ -11,6 +11,7 @@ import { ReviewRepository } from "./dao/review.repository";
 import { Review } from "./dao/review.entity";
 import { UsersRepository } from "./dao/users.repository";
 import { ReviewsDto } from "./dto/reviews.dto";
+import { AddReviewDto } from "./dto/add-review.dto";
 
 @Injectable()
 export class GamesService {
@@ -67,11 +68,15 @@ export class GamesService {
 
   async getGameById(id: number): Promise<Game> {
     // const found = await this.gamesRepository.findOne(id);
+    const avg = await this.reviewRepository.createQueryBuilder("review").select("AVG(review.ReviewScore)", "avg").from(Review, "reviews").where("review.gameId = :id", {id}).getRawOne();
+    console.log(avg.avg);
+    await this.gamesRepository.createQueryBuilder().update(Game).set({OverallScore: Math.floor(avg.avg)}).where("id = :id", {id}).execute();
     const found = await this.gamesRepository.createQueryBuilder("game")
       .leftJoinAndSelect("game.platforms", "platform")
       .leftJoinAndSelect("game.images", "images")
       .leftJoinAndSelect("game.genres", "genres")
       .leftJoinAndSelect("game.trailer", "trailer").where("game.Id = :id", {id});
+
     if(!found) {
       throw new NotFoundException();
     }
@@ -133,5 +138,34 @@ export class GamesService {
     await this.gamesRepository.save(game);
 
     return game;
+  }
+
+  async addReview(addReviewDto: AddReviewDto): Promise<boolean> {
+    const { ReviewTitle, ReviewText, ReviewScore, userId, gameId } = addReviewDto;
+    const user = await this.usersRepository.findOne(userId);
+    const game = await this.gamesRepository.findOne(gameId);
+    if(user && game) {
+      console.log("id " + userId + " gameId " + gameId);
+      const found = this.reviewRepository.createQueryBuilder('review').where("review.userId = :userId", {userId}).andWhere("review.gameId = :gameId", {gameId}).getOne();
+
+      if(! await found) {
+        console.log("not found");
+        const newReview = this.reviewRepository.create({
+          ReviewTitle,
+          ReviewText,
+          ReviewScore,
+          userId,
+          gameId,
+          users: user,
+          game
+        });
+        const saved = await this.reviewRepository.save(newReview);
+        console.log("saved " + saved);
+
+        return true;
+      }
+    }
+    console.log("FALSE");
+    return false;
   }
 }

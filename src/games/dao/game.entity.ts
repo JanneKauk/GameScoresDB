@@ -1,8 +1,18 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany, ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { Images } from "./images.entity";
 import { Platform } from "./platform.entity";
 import { Genre } from "./genre.entity";
 import { Trailer } from "./trailer.entity";
+import { Review } from "./review.entity";
 
 
 @Entity({name: 'game'})
@@ -59,4 +69,8 @@ export class Game {
     }
   })
   genres: Genre[];
+
+  @OneToMany(() => Review, review => review.game)
+  reviews: Array<Review>;
+
 }
