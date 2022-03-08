@@ -21,7 +21,7 @@ import { configValidationSchema } from "./config.schema";
           autoLoadEntities: true,
           synchronize: false, // keeps database schema in sync. Basically drops and creates all the tables again?
           host: configService.get("DB_HOST"),
-          port: 3306,
+          port: 3309,
           username: configService.get("DB_USERNAME"),
           password: configService.get("DB_PASSWORD"),
           database: configService.get("DB_DATABASE")
