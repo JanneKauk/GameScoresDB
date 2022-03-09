@@ -4,6 +4,7 @@ import { GamesModule } from "./games/games.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthenticationModule } from "./authentication/authentication.module";
 import { configValidationSchema } from "./config.schema";
+import { avgscores } from "./games/dao/avgscores.entity";
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { configValidationSchema } from "./config.schema";
           port: 3306,
           username: configService.get("DB_USERNAME"),
           password: configService.get("DB_PASSWORD"),
-          database: configService.get("DB_DATABASE")
+          database: configService.get("DB_DATABASE"),
+          entities: [avgscores]
         };
       }
     }),

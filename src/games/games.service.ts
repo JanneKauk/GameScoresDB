@@ -6,12 +6,15 @@ import { CreateGameDto } from "./dto/create-game.dto";
 import { GetGamesFilterDto } from "./dto/get-games-filter.dto";
 import { Platform } from "./dao/platform.entity";
 import { PlatformsRepository } from "./dao/platforms.repository";
-import { getConnection } from "typeorm";
+import { getConnection, getManager } from "typeorm";
 import { ReviewRepository } from "./dao/review.repository";
 import { Review } from "./dao/review.entity";
 import { UsersRepository } from "./dao/users.repository";
 import { ReviewsDto } from "./dto/reviews.dto";
 import { AddReviewDto } from "./dto/add-review.dto";
+import { avgscores } from "./dao/avgscores.entity";
+import {getGameDto} from "./dto/get-game-dto"
+import { isAlpha } from "class-validator";
 
 @Injectable()
 export class GamesService {
@@ -23,7 +26,7 @@ export class GamesService {
     @InjectRepository(ReviewRepository)
     private reviewRepository: ReviewRepository,
     @InjectRepository(UsersRepository)
-    private usersRepository: UsersRepository
+    private usersRepository: UsersRepository,
   ) {
   }
 
@@ -38,7 +41,7 @@ export class GamesService {
     return count
   }
 
-  async getGamesWithEverything(page): Promise<Game[]> {
+  async getGamesWithEverything(page): Promise<getGameDto[]> {
     const to = 20*page
     const from = to-19
     // const gamesWithPlatforms = await connection.getRepository()
@@ -51,8 +54,48 @@ export class GamesService {
 
       console.log(await this.reviewRepository.createQueryBuilder().getMany())
       console.log(test);
+      const entityManager = getManager();
+      const list: getGameDto[] = [];
+        for(let i = 0; i < test.length; i++) {
+          console.log(test[i].Id)
+          console.log("name " + test[i].title);
+        const avgscoresfound = await entityManager.findOne(avgscores, {gameId: test[i].Id})
+          console.log("dsfa")
+          // console.log(avgscoresfound);
+         if(typeof avgscoresfound !== 'undefined') {
+           console.log("inside");
+          console.log(avgscoresfound.avg);
+          const foundGame: getGameDto = {
+            Id: test[i].Id,
+            title: test[i].title,
+            ReleaseDate: test[i].ReleaseDate,
+            Description: test[i].Description,
+            platforms: test[i].platforms,
+            images: test[i].images,
+            genres: test[i].genres,
+            trailer: test[i].trailer,
+            avgscores: avgscoresfound.avg
+          }
+            list.push(foundGame);
+         } else {
+           const foundGame: getGameDto = {
+             Id: test[i].Id,
+             title: test[i].title,
+             ReleaseDate: test[i].ReleaseDate,
+             Description: test[i].Description,
+             platforms: test[i].platforms,
+             images: test[i].images,
+             genres: test[i].genres,
+             trailer: test[i].trailer,
+             avgscores: 0
+           }
+            list.push(foundGame);
+         }
 
-    return  test;
+        }
+
+
+    return  list;
   }
 
   async createGame(createGameDto: CreateGameDto, platformId: number): Promise<Game> {
@@ -74,11 +117,11 @@ export class GamesService {
     return game;
   }
 
-  async getGameById(id: number): Promise<Game> {
+  async getGameById(id: number): Promise<getGameDto> {
     // const found = await this.gamesRepository.findOne(id);
-    const avg = await this.reviewRepository.createQueryBuilder("review").select("AVG(review.ReviewScore)", "avg").from(Review, "reviews").where("review.gameId = :id", {id}).getRawOne();
-    console.log(avg.avg);
-    await this.gamesRepository.createQueryBuilder().update(Game).set({OverallScore: Math.floor(avg.avg)}).where("id = :id", {id}).execute();
+    // const avg = await this.reviewRepository.createQueryBuilder("review").select("AVG(review.ReviewScore)", "avg").from(Review, "reviews").where("review.gameId = :id", {id}).getRawOne();
+    // console.log(avg.avg);
+    // await this.gamesRepository.createQueryBuilder().update(Game).set({OverallScore: Math.floor(avg.avg)}).where("id = :id", {id}).execute();
     const found = await this.gamesRepository.createQueryBuilder("game")
       .leftJoinAndSelect("game.platforms", "platform")
       .leftJoinAndSelect("game.images", "images")
@@ -88,7 +131,25 @@ export class GamesService {
     if(!found) {
       throw new NotFoundException();
     }
-    return found.getOne();
+    const { Id, title, ReleaseDate, Description, platforms, images, genres, trailer } = await found.getOne();
+
+    const entityManager = getManager();
+
+    const avgscoresfound = await entityManager.findOne( avgscores,{gameId: id})
+    const foundGame: getGameDto = {
+      Id,
+      title,
+      ReleaseDate,
+      Description,
+      platforms,
+      images,
+      genres,
+      trailer,
+      avgscores: avgscoresfound.avg
+
+    }
+
+    return foundGame;
   }
 
   async getGameReviewsById(id: number): Promise<ReviewsDto[]> {
@@ -140,13 +201,7 @@ export class GamesService {
 
     }
 
-  async updateGameTitle(id: number, title: string): Promise<Game> {
-    const game = await this.getGameById(id);
-    game.title = title;
-    await this.gamesRepository.save(game);
 
-    return game;
-  }
 
   async addReview(addReviewDto: AddReviewDto, Id: number): Promise<boolean> {
     console.log("service " + Id);
@@ -156,6 +211,11 @@ export class GamesService {
     if(user && game) {
       console.log("id " + userId + " gameId " + gameId);
       const found = this.reviewRepository.createQueryBuilder('review').where("review.userId = :Id", {Id}).andWhere("review.gameId = :gameId", {gameId}).getOne();
+    // const entityManager = getManager();
+
+    // const avgscoresfound = await entityManager.findOne( avgscores,{gameId: Id})
+    //   console.log(avgscoresfound)
+    //   await this.gamesRepository.createQueryBuilder().update(Game).set({OverallScore: Math.floor(avgscoresfound.avg)}).where("id = :id", {Id}).execute();
 
       if(! await found) {
         console.log("not found");

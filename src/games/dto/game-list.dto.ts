@@ -11,8 +11,6 @@ export class gameListDto {
 
   Description: string;
 
-  OverallScore: number;
-
   URL: string;
 
   platform: string[];

@@ -6,6 +6,7 @@ import { Game } from "./dao/game.entity";
 import { ReviewsDto } from "./dto/reviews.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { AddReviewDto } from "./dto/add-review.dto";
+import { getGameDto } from "./dto/get-game-dto";
 
 @Controller('games')
 // @UseGuards(AuthGuard())
@@ -23,7 +24,7 @@ export class GamesController {
   }
 
   @Get("/everything/:page")
-  getGamesWithEverything(@Param('page') page: number): Promise<Game[]> {
+  getGamesWithEverything(@Param('page') page: number): Promise<getGameDto[]> {
     // const gamesWithPlatforms = await connection.getRepository()
     return this.gamesService.getGamesWithEverything(page);
   }
@@ -40,7 +41,7 @@ export class GamesController {
   }
 
   @Get('/:id')
-  getGameById(@Param('id') id: number): Promise<Game> {
+  getGameById(@Param('id') id: number): Promise<getGameDto> {
     return this.gamesService.getGameById(id);
   }
 
@@ -50,10 +51,6 @@ export class GamesController {
 
   }
 
-  @Patch('/:id/title')
-  updateGameTitle(@Param('id') id: number, @Body('title') title: string): Promise<Game> {
-    return this.gamesService.updateGameTitle(id, title);
-  }
 
   @Get('/reviews/:id')
   getGameReviewsById(@Param('id') id: number): Promise<ReviewsDto[]> {
@@ -63,6 +60,7 @@ export class GamesController {
   @Post('/addreview')
   @UseGuards(AuthGuard())
   addReview(@Body() addReviewDto: AddReviewDto, @Req() req): Promise<boolean> {
+    console.log("test");
     return this.gamesService.addReview(addReviewDto, req.user.Id);
   }
 }

@@ -13,7 +13,7 @@ import { Platform } from "./platform.entity";
 import { Genre } from "./genre.entity";
 import { Trailer } from "./trailer.entity";
 import { Review } from "./review.entity";
-
+import { avgscores} from "./avgscores.entity";
 
 @Entity({name: 'game'})
 export class Game {
@@ -28,12 +28,6 @@ export class Game {
 
   @Column()
   Description: string;
-
-
-  @Column({
-    nullable: true
-  })
-  OverallScore: number;
 
   @Column()
   imagesId: number;
