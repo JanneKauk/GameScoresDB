@@ -11,7 +11,7 @@ import { Game } from "./game.entity";
 export class avgscores {
   @ViewColumn()
   gameId
-
+npm
   @ViewColumn()
   avg
 

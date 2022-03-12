@@ -10,8 +10,14 @@ export class GamesRepository extends Repository<Game> {
     const query = this.createQueryBuilder('game');
 
     if (search) {
-      query.andWhere('game.title LIKE :search OR game.Description LIKE :search ', { search: `%${search}%` });
+      query.
+          leftJoinAndSelect("game.platforms", "platform")
+        .leftJoinAndSelect("game.images", "images")
+        .leftJoinAndSelect("game.genres", "genres")
+        .leftJoinAndSelect("game.trailer", "trailer")
+        .where('game.title LIKE :search OR game.Description LIKE :search ', { search: `%${search}%` });
     }
+    console.log(query.getMany());
 
     return await query.getMany();
   }
