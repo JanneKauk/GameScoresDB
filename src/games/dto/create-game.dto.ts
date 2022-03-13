@@ -13,5 +13,8 @@ export class CreateGameDto {
   @IsNotEmpty()
   imagesId: number;
 
+  trailerId: number;
+
+
   // OverallScore: number;
 }

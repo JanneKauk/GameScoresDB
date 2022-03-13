@@ -9,10 +9,19 @@ export class AuthenticationController {
   ) {
   }
 
+  /**
+   * @returns Promise<void>
+   * @param authenticationDataDto - Data access object for user creation
+   */
   @Post("/signup")
   signUp(@Body() authenticationDataDto: AuthenticationDataDto): Promise<void> {
     return this.authentiationService.signUp(authenticationDataDto);
   }
+
+  /**
+   * @returns Promise<{ accessToken: string }>
+   * @param authenticationDataDto - Data access object for user creation
+   */
   @Post("/signin")
   signIn(@Body() authenticationDataDto: AuthenticationDataDto): Promise<{ accessToken: string }> {
     return this.authentiationService.signIn(authenticationDataDto);

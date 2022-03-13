@@ -8,13 +8,11 @@ import { Platform } from "./dao/platform.entity";
 import { PlatformsRepository } from "./dao/platforms.repository";
 import { getConnection, getManager } from "typeorm";
 import { ReviewRepository } from "./dao/review.repository";
-import { Review } from "./dao/review.entity";
 import { UsersRepository } from "./dao/users.repository";
 import { ReviewsDto } from "./dto/reviews.dto";
 import { AddReviewDto } from "./dto/add-review.dto";
 import { avgscores } from "./dao/avgscores.entity";
 import { getGameDto } from "./dto/get-game-dto";
-import { isAlpha } from "class-validator";
 
 @Injectable()
 export class GamesService {
@@ -30,9 +28,14 @@ export class GamesService {
   ) {
   }
 
+  /**
+   * @returns Promise<Game[]>
+   * @param filterDto - The Dto for filtered games
+   *   */
   getGames(filterDto: GetGamesFilterDto): Promise<Game[]> {
     return this.gamesRepository.getGames(filterDto);
   }
+
 
   async getGameCount(): Promise<number> {
     const count = await this.gamesRepository.createQueryBuilder("game")
@@ -41,6 +44,10 @@ export class GamesService {
     return count;
   }
 
+  /**
+   * @returns Promise<getGameDto[]>
+   * @param page - The current page in the frontpage
+   *   */
   async getGamesWithEverything(page): Promise<getGameDto[]> {
     const to = 20 * page;
     const from = to - 19;
@@ -98,14 +105,20 @@ export class GamesService {
     return list;
   }
 
+  /**
+   * @returns Promise<Game>
+   * @param createGameDto - The Dto for game creation
+   * @param platformId - The platform that you want to associate with the game
+   *   */
   async createGame(createGameDto: CreateGameDto, platformId: number): Promise<Game> {
-    const { title, Description, ReleaseDate, imagesId } = createGameDto;
+    const { title, Description, ReleaseDate, imagesId, trailerId } = createGameDto;
 
     const game = this.gamesRepository.create({
       title,
       Description,
       ReleaseDate,
-      imagesId
+      imagesId,
+      trailerId
     });
     const savedGame = await this.gamesRepository.save(game);
     await getConnection()
@@ -117,6 +130,10 @@ export class GamesService {
     return game;
   }
 
+  /**
+   * @returns Promise<getGameDto> - returns the game that is found by the id
+   * @param id - The id of the game
+   */
   async getGameById(id: number): Promise<getGameDto> {
     // const found = await this.gamesRepository.findOne(id);
     // const avg = await this.reviewRepository.createQueryBuilder("review").select("AVG(review.ReviewScore)", "avg").from(Review, "reviews").where("review.gameId = :id", {id}).getRawOne();
@@ -171,6 +188,10 @@ export class GamesService {
     return foundGame;
   }
 
+  /**
+   * @returns Promise<ReviewsDto[]> - returns all the reviews related to a game
+   * @param id - The id of a game to get related reviews
+   */
   async getGameReviewsById(id: number): Promise<ReviewsDto[]> {
     const reviews: ReviewsDto[] = [];
     let reviewsEnt: ReviewsDto;
@@ -204,6 +225,10 @@ export class GamesService {
     return found;
   }
 
+  /**
+   * @returns Promise<void>
+   * @param id - The id of a game to delete
+   */
   async deleteGameById(id: number): Promise<void> {
     // const foundGame = this.gamesRepository.findOne(id);
     // const test = getConnection()
@@ -221,6 +246,11 @@ export class GamesService {
   }
 
 
+  /**
+   * @returns Promise<boolean> - Returns a boolean
+   * @param addReviewDto - The Data transfer object of a review.
+   * @param Id - The id of the user
+   */
   async addReview(addReviewDto: AddReviewDto, Id: number): Promise<boolean> {
     console.log("service " + Id);
     const { ReviewTitle, ReviewText, ReviewScore, userId, gameId } = addReviewDto;

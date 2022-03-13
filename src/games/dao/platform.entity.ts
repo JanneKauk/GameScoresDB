@@ -1,6 +1,9 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Game } from "./game.entity";
 
+/**
+ * An entity for a platform table in the database
+ */
 @Entity({name: 'platform'})
 export class Platform {
   @PrimaryGeneratedColumn()

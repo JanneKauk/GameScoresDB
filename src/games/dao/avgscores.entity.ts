@@ -1,7 +1,9 @@
 import { JoinColumn, OneToOne, ViewColumn, ViewEntity } from "typeorm";
 import { Game } from "./game.entity";
 
-
+/**
+ * A view entity for a view in the database
+ */
 @ViewEntity({
 
   expression: `

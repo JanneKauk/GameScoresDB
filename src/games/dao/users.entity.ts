@@ -1,7 +1,9 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Review } from "./review.entity";
 
-
+/**
+ * An entity for a users table in the database
+ */
 @Entity({name: 'users'})
 export class Users {
 

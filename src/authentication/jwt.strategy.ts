@@ -15,14 +15,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private configService: ConfigService
   ) {
     super({
-      secretOrKey: configService.get('JWT_SECRET'),
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: configService.get("JWT_SECRET"),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
     });
   }
+
+  /**
+   * @returns Promise<Users>
+   * @param payload - payload interface with user data
+   */
   async validate(payload: JwtPayload): Promise<Users> {
     const { username } = payload;
     const user: Users = await this.usersRepository.findOne({ username });
-    if(!user) {
+    if (!user) {
       throw new UnauthorizedException();
     }
     return user;

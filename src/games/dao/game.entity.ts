@@ -13,8 +13,10 @@ import { Platform } from "./platform.entity";
 import { Genre } from "./genre.entity";
 import { Trailer } from "./trailer.entity";
 import { Review } from "./review.entity";
-import { avgscores} from "./avgscores.entity";
 
+/**
+ * An entity for a game table in the database
+ */
 @Entity({name: 'game'})
 export class Game {
   @PrimaryGeneratedColumn()

@@ -2,7 +2,9 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGene
 import { Game } from "./game.entity";
 import { Users } from "./users.entity";
 
-
+/**
+ * An entity for a review table in the database
+ */
 @Entity({name: 'review'})
 export class Review {
   @PrimaryGeneratedColumn()

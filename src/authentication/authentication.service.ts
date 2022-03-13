@@ -15,10 +15,18 @@ export class AuthenticationService {
   ) {
   }
 
+  /**
+   * @returns Promise<void>
+   * @param authenticationDataDto - Data access object for user creation
+   */
   async signUp(authenticationDataDto: AuthenticationDataDto): Promise<void> {
     return this.usersRepository.createUser(authenticationDataDto);
   }
 
+  /**
+   * @returns Promise<{ accessToken: string }>
+   * @param authenticationDataDto - Data access object for user creation
+   */
   async signIn(authenticationDataDto: AuthenticationDataDto): Promise<{ accessToken: string }> {
     const { username, Password, Email } = authenticationDataDto;
 
